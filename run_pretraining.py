@@ -32,105 +32,7 @@ from tensorflow.contrib import cluster_resolver as contrib_cluster_resolver
 from tensorflow.contrib import data as contrib_data
 from tensorflow.contrib import tpu as contrib_tpu
 
-flags = tf.flags
-
-FLAGS = flags.FLAGS
-
-## Required parameters
-flags.DEFINE_string(
-    "albert_config_file", None,
-    "The config json file corresponding to the pre-trained ALBERT model. "
-    "This specifies the model architecture.")
-
-flags.DEFINE_string(
-    "input_file", None,
-    "Input TF example files (can be a glob or comma separated).")
-
-flags.DEFINE_string(
-    "output_dir", None,
-    "The output directory where the model checkpoints will be written.")
-
-flags.DEFINE_string(
-    "export_dir", None,
-    "The output directory where the saved models will be written.")
-## Other parameters
-flags.DEFINE_string(
-    "init_checkpoint", None,
-    "Initial checkpoint (usually from a pre-trained ALBERT model).")
-
-flags.DEFINE_integer(
-    "max_seq_length", 512,
-    "The maximum total input sequence length after WordPiece tokenization. "
-    "Sequences longer than this will be truncated, and sequences shorter "
-    "than this will be padded. Must match data generation.")
-
-flags.DEFINE_integer(
-    "max_predictions_per_seq", 20,
-    "Maximum number of masked LM predictions per sequence. "
-    "Must match data generation.")
-
-flags.DEFINE_bool("do_train", True, "Whether to run training.")
-
-flags.DEFINE_bool("do_eval", False, "Whether to run eval on the dev set.")
-
-flags.DEFINE_integer("train_batch_size", 4096, "Total batch size for training.")
-
-flags.DEFINE_integer("eval_batch_size", 64, "Total batch size for eval.")
-
-flags.DEFINE_enum("optimizer", "lamb", ["adamw", "lamb"],
-                  "The optimizer for training.")
-
-flags.DEFINE_float("learning_rate", 0.00176, "The initial learning rate.")
-
-flags.DEFINE_float("poly_power", 1.0, "The power of poly decay.")
-
-flags.DEFINE_integer("num_train_steps", 125000, "Number of training steps.")
-
-flags.DEFINE_integer("num_warmup_steps", 3125, "Number of warmup steps.")
-
-flags.DEFINE_integer("start_warmup_step", 0, "The starting step of warmup.")
-
-flags.DEFINE_integer("save_checkpoints_steps", 5000,
-                     "How often to save the model checkpoint.")
-
-flags.DEFINE_integer("iterations_per_loop", 1000,
-                     "How many steps to make in each estimator call.")
-
-flags.DEFINE_integer("max_eval_steps", 100, "Maximum number of eval steps.")
-
-flags.DEFINE_bool("use_tpu", False, "Whether to use TPU or GPU/CPU.")
-
-flags.DEFINE_bool("init_from_group0", False, "Whether to initialize"
-                  "parameters of other groups from group 0")
-
-tf.flags.DEFINE_string(
-    "tpu_name", None,
-    "The Cloud TPU to use for training. This should be either the name "
-    "used when creating the Cloud TPU, or a grpc://ip.address.of.tpu:8470 "
-    "url.")
-
-tf.flags.DEFINE_string(
-    "tpu_zone", None,
-    "[Optional] GCE zone where the Cloud TPU is located in. If not "
-    "specified, we will attempt to automatically detect the GCE project from "
-    "metadata.")
-
-tf.flags.DEFINE_string(
-    "gcp_project", None,
-    "[Optional] Project name for the Cloud TPU-enabled project. If not "
-    "specified, we will attempt to automatically detect the GCE project from "
-    "metadata.")
-
-tf.flags.DEFINE_string("master", None, "[Optional] TensorFlow master URL.")
-
-flags.DEFINE_integer(
-    "num_tpu_cores", 8,
-    "Only used if `use_tpu` is True. Total number of TPU cores to use.")
-
-flags.DEFINE_float(
-    "masked_lm_budget", 0,
-    "If >0, the ratio of masked ngrams to unmasked ngrams. Default 0,"
-    "for offline masking")
+FLAGS = tf.flags.FLAGS
 
 
 def model_fn_builder(albert_config, init_checkpoint, learning_rate,
@@ -560,9 +462,3 @@ def main(_):
         for key in sorted(result.keys()):
           tf.logging.info("  %s = %s", key, str(result[key]))
           writer.write("%s = %s\n" % (key, str(result[key])))
-
-if __name__ == "__main__":
-  flags.mark_flag_as_required("input_file")
-  flags.mark_flag_as_required("albert_config_file")
-  flags.mark_flag_as_required("output_dir")
-  tf.app.run()
