@@ -281,4 +281,7 @@ class AlbertModelTest(tf.test.TestCase):
 
 
 if __name__ == "__main__":
+  import os
+  tf.logging.set_verbosity(tf.logging.ERROR)
+  os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
   tf.test.main()
