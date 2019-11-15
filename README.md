@@ -124,11 +124,11 @@ python -m albert.run_pretraining \
 
 Fine-tuning Instructions
 ========================
-For XNLI, COLA, MNLI, and MRPC, use `run_classifier_sp.py`:
+For XNLI, COLA, MNLI, and MRPC, use `run_classifier.py`:
 
 ```
 pip install -r albert/requirements.txt
-python -m albert.run_classifier_sp \
+python -m albert.run_classifier \
   --task_name=MNLI \
   <additional flags>
 ```
